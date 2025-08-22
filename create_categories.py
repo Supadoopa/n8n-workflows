@@ -11,11 +11,10 @@ def load_def_categories():
         raw_map = json.load(f)
 
     # Normalize keys: strip non-alphanumerics and lowercase
-    integration_to_category = {
+    return {
         re.sub(r"[^a-z0-9]", "", item["integration"].lower()): item["category"]
         for item in raw_map
     }
-    return integration_to_category
 
 def extract_tokens_from_filename(filename):
     """Extract tokens from filename by splitting on '_' and removing '.json'"""
@@ -177,11 +176,14 @@ def main():
     # Sort by filename for consistency
     search_categories.sort(key=lambda x: x['filename'])
     
+    # Helper function to write JSON to file
+    def write_json_to_file(data, path):
+        with open(path, 'w', encoding='utf-8') as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
+
     # Write to search_categories.json
     output_path = Path("context/search_categories.json")
-    with open(output_path, 'w', encoding='utf-8') as f:
-        json.dump(search_categories, f, indent=2, ensure_ascii=False)
-    
+    write_json_to_file(search_categories, output_path)
     print(f"Generated search_categories.json with {len(search_categories)} entries")
     
     # Generate unique categories list for API
@@ -198,13 +200,11 @@ def main():
     
     # Write unique categories to a separate file for API consumption
     categories_output_path = Path("context/unique_categories.json")
-    with open(categories_output_path, 'w', encoding='utf-8') as f:
-        json.dump(categories_list, f, indent=2, ensure_ascii=False)
-    
+    write_json_to_file(categories_list, categories_output_path)
     print(f"Generated unique_categories.json with {len(categories_list)} categories")
     
     # Print some statistics
-    categorized = sum(1 for item in search_categories if item['category'])
+    categorized = len([item for item in search_categories if item['category']])
     uncategorized = len(search_categories) - categorized
     print(f"Categorized: {categorized}, Uncategorized: {uncategorized}")
     
@@ -216,7 +216,7 @@ def main():
     # Count categories
     category_counts = {}
     for item in search_categories:
-        category = item['category'] if item['category'] else "Uncategorized"
+        category = item['category'] or "Uncategorized"
         category_counts[category] = category_counts.get(category, 0) + 1
     
     # Sort by count (descending)

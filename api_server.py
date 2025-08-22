@@ -75,9 +75,7 @@ class WorkflowSummary(BaseModel):
     @field_validator('active', mode='before')
     @classmethod
     def convert_active(cls, v):
-        if isinstance(v, int):
-            return bool(v)
-        return v
+        return bool(v) if isinstance(v, int) else v
     
 
 class SearchResponse(BaseModel):
@@ -126,7 +124,7 @@ async def get_stats():
         stats = db.get_stats()
         return StatsResponse(**stats)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching stats: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error fetching stats: {str(e)}") from e
 
 @app.get("/api/workflows", response_model=SearchResponse)
 async def search_workflows(
@@ -478,7 +476,7 @@ async def search_workflows_by_category(
             filters={"category": category}
         )
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error searching by category: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error searching by category: {str(e)}") from e
 
 # Custom exception handler for better error responses
 @app.exception_handler(Exception)
