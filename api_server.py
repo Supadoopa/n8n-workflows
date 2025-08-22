@@ -189,7 +189,7 @@ async def search_workflows(
             }
         )
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error searching workflows: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error searching workflows: {str(e)}") from e
 
 @app.get("/api/workflows/{filename}")
 async def get_workflow_detail(filename: str):
@@ -222,7 +222,7 @@ async def get_workflow_detail(filename: str):
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error loading workflow: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error loading workflow: {str(e)}") from e
 
 @app.get("/api/workflows/{filename}/download")
 async def download_workflow(filename: str):
@@ -244,7 +244,7 @@ async def download_workflow(filename: str):
         raise HTTPException(status_code=404, detail=f"Workflow file '{filename}' not found")
     except Exception as e:
         print(f"Error downloading workflow {filename}: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Error downloading workflow: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error downloading workflow: {str(e)}") from e
 
 @app.get("/api/workflows/{filename}/diagram")
 async def get_workflow_diagram(filename: str):
@@ -274,10 +274,10 @@ async def get_workflow_diagram(filename: str):
         raise HTTPException(status_code=404, detail=f"Workflow file '{filename}' not found")
     except json.JSONDecodeError as e:
         print(f"Error parsing JSON in {filename}: {str(e)}")
-        raise HTTPException(status_code=400, detail=f"Invalid JSON in workflow file: {str(e)}")
+        raise HTTPException(status_code=400, detail=f"Invalid JSON in workflow file: {str(e)}") from e
     except Exception as e:
         print(f"Error generating diagram for {filename}: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Error generating diagram: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error generating diagram: {str(e)}") from e
 
 def generate_mermaid_diagram(nodes: List[Dict], connections: Dict) -> str:
     """Generate Mermaid.js flowchart code from workflow nodes and connections."""
@@ -364,7 +364,7 @@ async def get_integrations():
         # For now, return basic info. Could be enhanced to return detailed integration stats
         return {"integrations": [], "count": stats['unique_integrations']}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching integrations: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error fetching integrations: {str(e)}") from e
 
 @app.get("/api/categories")
 async def get_categories():
@@ -398,7 +398,7 @@ async def get_categories():
                 
     except Exception as e:
         print(f"Error loading categories: {e}")
-        raise HTTPException(status_code=500, detail=f"Error fetching categories: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error fetching categories: {str(e)}") from e
 
 @app.get("/api/category-mappings")
 async def get_category_mappings():
@@ -423,7 +423,7 @@ async def get_category_mappings():
         
     except Exception as e:
         print(f"Error loading category mappings: {e}")
-        raise HTTPException(status_code=500, detail=f"Error fetching category mappings: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error fetching category mappings: {str(e)}") from e
 
 @app.get("/api/workflows/category/{category}", response_model=SearchResponse)
 async def search_workflows_by_category(

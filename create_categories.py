@@ -7,14 +7,44 @@ import re
 def load_def_categories():
     """Load the definition categories from def_categories.json"""
     def_categories_path = Path("context/def_categories.json")
-    with open(def_categories_path, 'r', encoding='utf-8') as f:
-        raw_map = json.load(f)
+    
+    # DEBUG: Check if file exists
+    print(f"DEBUG: Checking if file exists: {def_categories_path}")
+    print(f"DEBUG: File exists: {def_categories_path.exists()}")
+    
+    try:
+        with open(def_categories_path, 'r', encoding='utf-8') as f:
+            raw_map = json.load(f)
+    except FileNotFoundError:
+        print(f"DEBUG: File not found: {def_categories_path}")
+        return {}
+    except json.JSONDecodeError as e:
+        print(f"DEBUG: JSON decode error: {e}")
+        return {}
+    
+    # DEBUG: Check the structure of loaded data
+    print(f"DEBUG: Type of raw_map: {type(raw_map)}")
+    print(f"DEBUG: Length of raw_map: {len(raw_map) if hasattr(raw_map, '__len__') else 'No length'}")
+    
+    if isinstance(raw_map, list) and len(raw_map) > 0:
+        print(f"DEBUG: First item type: {type(raw_map[0])}")
+        print(f"DEBUG: First item keys: {raw_map[0].keys() if isinstance(raw_map[0], dict) else 'Not a dict'}")
+        print(f"DEBUG: First few items: {raw_map[:3]}")
+    else:
+        print(f"DEBUG: raw_map is not a list or is empty: {raw_map}")
 
     # Normalize keys: strip non-alphanumerics and lowercase
-    return {
-        re.sub(r"[^a-z0-9]", "", item["integration"].lower()): item["category"]
-        for item in raw_map
-    }
+    try:
+        result = {
+            re.sub(r"[^a-z0-9]", "", item["integration"].lower()): item["category"]
+            for item in raw_map
+        }
+        print(f"DEBUG: Successfully created integration_to_category with {len(result)} items")
+        return result
+    except Exception as e:
+        print(f"DEBUG: Error creating integration_to_category: {e}")
+        print(f"DEBUG: Error type: {type(e).__name__}")
+        return {}
 
 def extract_tokens_from_filename(filename):
     """Extract tokens from filename by splitting on '_' and removing '.json'"""
