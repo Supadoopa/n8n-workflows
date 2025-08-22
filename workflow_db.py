@@ -1,17 +1,16 @@
-#!/usr/bin/env python3
+# flake8: noqa: E501
 """
 Fast N8N Workflow Database
 SQLite-based workflow indexer and search engine for instant performance.
 """
 
-import sqlite3
+import datetime
 import json
 import os
-import glob
-import datetime
+import sqlite3
 import hashlib
-from typing import Dict, List, Any, Optional, Tuple
 from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
 
 class WorkflowDatabase:
     """High-performance SQLite database for workflow metadata and search."""
@@ -274,6 +273,7 @@ class WorkflowDatabase:
             
             # Calendar & Tasks
             'googlecalendar': 'Google Calendar', 
+            # cSpell:ignore googletasks
             'googletasks': 'Google Tasks',
             'cal': 'Cal.com',
             'calendly': 'Calendly',

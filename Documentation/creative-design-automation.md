@@ -163,6 +163,7 @@ This document catalogs the **Creative Design Automation** workflows from the n8n
 ---
 
 ### Remove Advanced Background from Google Drive Images
+
 **Filename:** `1343_Splitout_Editimage_Automation_Webhook.json`  
 **Description:** Complex multi-step automation that orchestrates Splitinbatches, Editimage, and Google Drive for data processing. Uses 16 nodes and integrates with 5 services.  
 **Status:** Inactive  
