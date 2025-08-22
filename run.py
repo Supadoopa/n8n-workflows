@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
 """
-🚀 N8N Workflows Search Engine Launcher
 Start the advanced search system with optimized performance.
 """
 
 import sys
 import os
 import argparse
-from pathlib import Path
 
 
 def print_banner():
@@ -21,19 +19,9 @@ def check_requirements() -> bool:
     missing_deps = []
     
     try:
-        import sqlite3
+        import sqlite3  # noqa: F401
     except ImportError:
         missing_deps.append("sqlite3")
-    
-    try:
-        import uvicorn
-    except ImportError:
-        missing_deps.append("uvicorn")
-    
-    try:
-        import fastapi
-    except ImportError:
-        missing_deps.append("fastapi")
     
     if missing_deps:
         print(f"❌ Missing dependencies: {', '.join(missing_deps)}")
@@ -113,7 +101,7 @@ Examples:
   python run.py                    # Start with default settings
   python run.py --port 3000        # Start on port 3000
   python run.py --host 0.0.0.0     # Accept external connections
-  python run.py --reindex          # Force database reindexing
+  python run.py --reindex          # Force database re-rendering
   python run.py --dev              # Development mode with auto-reload
         """
     )
@@ -132,7 +120,7 @@ Examples:
     parser.add_argument(
         "--reindex", 
         action="store_true", 
-        help="Force database reindexing"
+        help="Force database re-rendering"
     )
     parser.add_argument(
         "--dev", 
