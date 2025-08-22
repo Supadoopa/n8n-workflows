@@ -25,7 +25,9 @@ class WorkflowDatabase {
   }
 
   async initialize() {
-    if (this.initialized) return;
+    if (this.initialized) {
+      return;
+    }
     await this.initDatabase();
     this.initialized = true;
   }
